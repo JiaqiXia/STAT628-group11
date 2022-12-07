@@ -13,9 +13,13 @@ Yelp is an Internet company founded in 2004 to “help people find great local b
 
 ## Code
 data cleaning.ipynb contains the overall data cleaning, and the steps of merging the business.json and review.json.
+
 EDA.ipynb contains the EDA part of our preliminary presentation.
+
 attribute_analysis.ipynb contains the data cleaning and analysis for attribute part.
+
 clean_review.ipynb and review_close.R contain the data cleaning for the review.
+
 model.Rmd contains the logistic model and the statistical test for attribute analysis and review analysis
 
 
