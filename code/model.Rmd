@@ -1,0 +1,86 @@
+---
+title: "STAT 628"
+author: "Yutong Zhang"
+date: "12/2/2022"
+output: pdf_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(textclean)
+attributes_df <- read.csv("/Users/seola/Documents/STAT628/Module3/df_attributes.csv", header = T)
+food_df <- read.csv("/Users/seola/Documents/STAT628/Module3/food_df.csv", header = T)
+```
+
+```{r}
+attributes_df$RestaurantsPriceRange2 <- as.factor(attributes_df$RestaurantsPriceRange2)
+
+mod <- glm(is_open ~ RestaurantsDelivery + RestaurantsTakeOut + RestaurantsPriceRange2 + BusinessAcceptsCreditCards + RestaurantsReservations + GoodForKids + RestaurantsGoodForGroups, 
+           family = binomial(link = "logit"), data = attributes_df)
+
+summary(mod)
+
+mod.reduce <- glm(is_open ~ RestaurantsDelivery + RestaurantsTakeOut + RestaurantsPriceRange2 + RestaurantsReservations + RestaurantsGoodForGroups, 
+           family = binomial(link = "logit"), data = attributes_df)
+
+summary(mod.reduce)
+
+sum(resid(mod.reduce, type = "pearson") ^ 2)
+pval = 1 - pchisq(3256.56, 3126)
+
+anova(mod.reduce, mod)
+pval = 1 - pchisq(0.35546, df=2)
+pval
+```
+```{r}
+par(mfrow=c(2,2)) #creates three panels to place plots.
+plot(mod.reduce,which=c(1,4)) #1st plots residual plot, 4th one plots Cook's distance
+```
+
+
+```{r}
+predict(mod.reduce, list(RestaurantsDelivery='True', RestaurantsTakeOut='False', RestaurantsPriceRange2=c(1), RestaurantsReservations='False', RestaurantsGoodForGroups='False'),type="response")
+```
+
+```{r}
+predict(mod.reduce, list(RestaurantsDelivery='True', RestaurantsTakeOut='True', RestaurantsPriceRange2=c(1), RestaurantsReservations='False', RestaurantsGoodForGroups='True'),type="response")
+```
+
+```{r}
+predict(mod.reduce, list(RestaurantsDelivery='False', RestaurantsTakeOut='False', RestaurantsPriceRange2=c(2), RestaurantsReservations='False', RestaurantsGoodForGroups='False'),type="response")
+```
+
+```{r}
+predict(mod.reduce, list(RestaurantsDelivery='False', RestaurantsTakeOut='False', RestaurantsPriceRange2=c(1), RestaurantsReservations='True', RestaurantsGoodForGroups='False'),type="response")
+```
+
+```{r}
+predict(mod.reduce, list(RestaurantsDelivery='False', RestaurantsTakeOut='False', RestaurantsPriceRange2=c(1), RestaurantsReservations='False', RestaurantsGoodForGroups='True'),type="response")
+```
+
+```{r}
+predict(mod.reduce, list(RestaurantsDelivery='True', RestaurantsTakeOut='True', RestaurantsPriceRange2=c(1), RestaurantsReservations='True', RestaurantsGoodForGroups='True'),type="response")
+```
+
+
+```{r}
+word.freq.table<- open_df_text %>% 
+  unnest_tokens(word, text_clean) %>%
+  anti_join(stop_words) %>%
+  count(word, sort = TRUE)
+word.freq.table
+```
+
+
+cheese, hot dog, pizza, salad, taco, burger
+
+```{r}
+food_df[food_df == "hot"] <- "hot dog"
+
+food_df_new <- matrix(c(37196,39944,16565	,32736,18182,27139,9858,10330,3347,7674,4901,7487),ncol = 2,nrow = 6,byrow = T)
+colnames(food_df_new) <- c("positive","negative")
+rownames(food_df_new) <- c("cheese","hot dog","pizza","salad","taco","burger")
+food_df_new
+chisq.test(food_df_new)
+```
