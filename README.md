@@ -24,3 +24,4 @@ model.Rmd contains the logistic model and the statistical test for attribute ana
 
 
 ## Shiny App
+https://msatheesh.shinyapps.io/Module-3/
