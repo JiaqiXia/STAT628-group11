@@ -20,7 +20,9 @@ attribute_analysis.ipynb contains the data cleaning and analysis for attribute p
 
 clean_review.ipynb and review_close.R contain the data cleaning for the review.
 
-model.Rmd contains the logistic model and the statistical test for attribute analysis and review analysis
+model.Rmd contains the logistic model and the statistical test for attribute analysis and review analysis.
+
+shiny.R is for the shiny app.
 
 
 ## Shiny App
